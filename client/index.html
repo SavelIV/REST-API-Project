@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+      integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+      crossorigin="anonymous"
+    />
+
+    <title>REST API</title>
+    <style>
+      [v-cloak] {
+        display: none;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="app">
+      <h1 class="pb-5 text-center">REST API Project</h1>
+      <h2 class="container text-center">
+        This simple full stack web application using Vue.js frontend and Node.js with Express.js
+        backend shows how REST API works.
+      </h2>
+      <hr />
+
+      <div class="container pt-3" v-cloak>
+        <form class="form-inline" @submit.prevent="createContact">
+          <div class="form-group mr-5 pb-3">
+            <label for="name" class="mr-3">Name</label>
+            <input
+              type="text"
+              class="form-control"
+              id="name"
+              placeholder="0 < Name < 40 simbols"
+              v-model="form.name"
+            />
+          </div>
+          <div class="form-group mr-5 pb-3">
+            <label for="value" class="mr-3">Data</label>
+            <input
+              type="text"
+              class="form-control"
+              id="value"
+              placeholder="0 < Data < 100 simbols"
+              v-model="form.value"
+            />
+          </div>
+          <button class="btn btn-primary mb-3" type="submit" :disabled="!canCreate">
+            Create on server
+          </button>
+        </form>
+
+        <select class="mb-3 mt-3 col-sm-4" v-model="filter">
+          <option value="all">All data</option>
+          <option value="marked">Marked data</option>
+          <option value="not marked">Not marked data</option>
+        </select>
+
+        <div v-if="loading">
+          <loader />
+        </div>
+
+        <div v-else-if="filterData.length">
+          <div class="card mb-3" v-for="contact in filterData">
+            <div class="card-body">
+              <h5 class="card-title" :style="{color: contact.marked ? '#ccc' : 'red'}">
+                {{contact.name | uppercase}}
+              </h5>
+              <p class="card-text" :style="{color: contact.marked ? '#ccc' : '#000'}">
+                {{contact.value | uppercase}}
+              </p>
+              <button
+                class="btn btn-primary"
+                @click="markContact(contact.id)"
+                :disabled="contact.marked"
+              >
+                Mark data on server
+              </button>
+              <button class="btn btn-danger" @click="removeContact(contact.id)">
+                Delete data from server
+              </button>
+            </div>
+            <div class="card-body">
+              {{contact.text}}
+            </div>
+          </div>
+        </div>
+
+        <h2 v-else>NO DATA ON SERVER</h2>
+        <h3 :style="{color: 'red'}">{{message | uppercase}}</h3>
+      </div>
+    </div>
+
+    <script type="module" src="frontend.js"></script>
+  </body>
+</html>
